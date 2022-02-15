@@ -34,6 +34,10 @@ artApp.getArt = function (userChoice) {
 
 // create a method which will take the API data and display it on our page
 artApp.displayArt = function (artArray) {
+	// Empty everything out
+	const ulElement = document.getElementById("artwork");
+	ulElement.innerHTML = "";
+
 	// iterate through each object and get relevant info, construct an element
 	artArray.forEach(function (artwork) {
 		// console.log(artwork);
@@ -71,20 +75,39 @@ artApp.displayArt = function (artArray) {
 		listElement.appendChild(paragraphElement);
 
 		// add the li to the ul so that the data is finally in the DOM
-		const ulElement = document.getElementById("artwork");
+
 		ulElement.appendChild(listElement);
 
 		// console.log(artworkTitle, artworkImage, artist, altText);
 	});
 };
 
-artApp.getUserChoice = function () {};
-
-// create an init method
-artApp.init = function () {
-	console.log("App is initialized.");
-	artApp.getArt("porcelain");
+// Create a method which will update the heading of the page
+artApp.updateAnimalHeading = function (value) {
+	document.querySelector(
+		"#page-title span"
+	).textContent = `${value.toUpperCase()}S!`;
 };
 
-// Call the init method
+// create a method that sets up all of the event listeners within this app
+artApp.eventListenerSetUp = function () {
+	const selectElement = document.querySelector("select");
+	// 1st event listener on the select element [whenever the user selects a different option]
+	selectElement.addEventListener("change", function (e) {
+		// This will give us back the object which owns the currently executing code (AKA when the animal choice changes - get me art related to the new animal)
+		artApp.getArt(this.value);
+		artApp.updateAnimalHeading(this.value);
+	});
+};
+
+// Create an init method
+artApp.init = function () {
+	console.log("App is initialized.");
+	// Set up our event listeners so that they are ready to go as the user moves through the app
+	artApp.eventListenerSetUp();
+	// Make our initial call
+	artApp.getArt("bear");
+};
+
+// Call the init method and start the app
 artApp.init();
